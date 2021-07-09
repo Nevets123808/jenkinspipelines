@@ -8,8 +8,10 @@ pipeline{
         }
         stage("Install Docker"){
             steps{
-                sh "curl https://get.docker.com | sudo bash"
-                sh "sudo usermod -aG docker jenkins"
+                if (sh "ls /etc/docker/ | grep 'keys'"="keys.json"){
+                    sh "curl https://get.docker.com | sudo bash"
+                    sh "sudo usermod -aG docker jenkins"
+                }
             }
         }
         stage("Install Docker-compose"){
