@@ -1,19 +1,19 @@
 pipeline{
     agent any
     environment{
-        docker = sh "ls/etc/docker/ | grep 'keys'"
+        DB_PASSWORD = "badpassword"
     }
     stages{
         stage("Get repo"){
             steps{
-                sh "[ ! -d 'chaperootodo_client' ] && git clone https://gitlab.com/qacdevops/chaperootodo_client || true"
+                sh "rm -rf chapperootodo_client"
+                sh "git clone https://gitlab.com/qacdevops/chaperootodo_client || true"
             }
         }
         stage("Install Docker"){
             steps{
-                if (docker=="keys.json"){
-                    sh "curl https://get.docker.com | sudo bash"
-                    sh "sudo usermod -aG docker jenkins"
+                sh "curl https://get.docker.com | sudo bash"
+                // sh "sudo usermod -aG docker jenkins"
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline{
         }
         stage("Deploy"){
             steps{
-                sh "sudo docker-compose pull && sudo -E DB_PASSWORD=${DB_PASSWORD} docker-compose up -d"
+                sh "cd chaperootodo_client/ && sudo docker-compose pull && sudo -E DB_PASSWORD=${DB_PASSWORD} docker-compose up -d"
             }
         }
     }
