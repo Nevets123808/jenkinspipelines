@@ -8,7 +8,8 @@ pipeline{
         }
         stage("Install Docker"){
             steps{
-                if (sh "ls /etc/docker/ | grep 'keys'"="keys.json"){
+                docker = sh "ls/etc/docker/ | grep 'keys'"
+                if (sh docker="keys.json"){
                     sh "curl https://get.docker.com | sudo bash"
                     sh "sudo usermod -aG docker jenkins"
                 }
